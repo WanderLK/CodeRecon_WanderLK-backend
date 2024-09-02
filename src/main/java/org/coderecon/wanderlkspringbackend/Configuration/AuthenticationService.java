@@ -77,19 +77,10 @@ public class AuthenticationService {
         return new AuthenticationResponse(accessToken, refreshToken, "User registration was successful");
     }
 
-    // Helper method to validate role
-    private boolean isValidRole(String role) {
-        return role.equals("ADMIN") || role.equals("CUSTOMER") || role.equals("CASHIER")
-                || role.equals("KITCHEN_MANAGER") || role.equals("BRANCH_MANAGER") || role.equals("WAITER")
-                || role.equals("DELIVERY_PERSON") || role.equals("INVENTORY_MANAGER");
-    }
+    // Helper method to validate role ---------------------- TO DO
 
-    // Helper method to check if role requires a cafe ID
-    private boolean requiresCafeId(String role) {
-        return role.equals("ADMIN") || role.equals("CASHIER") || role.equals("KITCHEN_MANAGER")
-                || role.equals("BRANCH_MANAGER") || role.equals("WAITER") || role.equals("DELIVERY_PERSON")
-                || role.equals("INVENTORY_MANAGER");
-    }
+
+
 
     // Saves tokens for the user
     private void saveUserToken(String accessToken, String refreshToken, User user) {
