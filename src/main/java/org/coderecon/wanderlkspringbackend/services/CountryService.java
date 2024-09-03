@@ -1,10 +1,7 @@
 package org.coderecon.wanderlkspringbackend.services;
 
 import org.coderecon.wanderlkspringbackend.models.Country;
-import org.coderecon.wanderlkspringbackend.models.VisaDetails;
-import org.coderecon.wanderlkspringbackend.models.VisaStatus;
 import org.coderecon.wanderlkspringbackend.repositories.CountryRepository;
-import org.coderecon.wanderlkspringbackend.repositories.VisaRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -42,5 +39,26 @@ public class CountryService {
 
     public ResponseEntity<Object> getAll() {
         return ResponseEntity.ok(countryRepository.findAll());
+    }
+
+    public ResponseEntity<String> updateCountryField(String id, String fieldName, String newValue) {
+        Optional<Country> optionalCountry = countryRepository.findById(id);
+
+        if (optionalCountry.isPresent()) {
+            Country country = optionalCountry.get();
+
+            switch (fieldName) {
+                case "name" -> country.setName(newValue);
+                case "status" -> country.setStatus(newValue);
+                default -> {
+                    return ResponseEntity.badRequest().body("Invalid field name");
+                }
+            }
+
+            countryRepository.save(country);
+            return ResponseEntity.ok("Field updated successfully");
+        } else {
+            return ResponseEntity.status(HttpStatus.NOT_FOUND).body("Country not found");
+        }
     }
 }

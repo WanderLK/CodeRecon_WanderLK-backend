@@ -33,4 +33,11 @@ public class CountryController {
     public ResponseEntity<Object> deleteCountry(@PathVariable String id) {
         return countryService.delete(id);
     }
+
+    @PatchMapping("/update-status/{id}")
+    public ResponseEntity<String> updateCountryField(@PathVariable String id,
+                                                    @RequestParam String fieldName,
+                                                    @RequestParam String newValue) {
+        return countryService.updateCountryField(id, fieldName, newValue);
+    }
 }
