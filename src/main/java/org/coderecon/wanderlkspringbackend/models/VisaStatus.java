@@ -4,6 +4,7 @@ import lombok.Data;
 
 @Data
 public class VisaStatus {
+    private String id;
     private String receivedEmbassy; // passed, failed, pending
     private String reviewingApplication; // passed, failed, pending
     private String personalDetailsVerification; // passed, failed, pending
