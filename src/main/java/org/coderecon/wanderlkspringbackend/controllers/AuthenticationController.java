@@ -24,7 +24,7 @@ public class AuthenticationController {
     @PostMapping("/register")
     public ResponseEntity<AuthenticationResponse> register(
             @RequestBody User request
-    ) {
+    ) throws Exception {
         System.out.println("Registering user");
         return ResponseEntity.ok(authService.register(request));
     }

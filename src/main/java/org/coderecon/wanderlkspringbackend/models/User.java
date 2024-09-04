@@ -20,6 +20,8 @@ public class User implements UserDetails {
     private String Role;
     private String username = email;
 
+    private String encryptionKeyId;
+
     @Override
     public Collection<? extends GrantedAuthority> getAuthorities() {
         return List.of(new SimpleGrantedAuthority(this.Role));

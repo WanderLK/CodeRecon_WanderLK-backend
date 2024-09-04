@@ -4,12 +4,10 @@ import lombok.Data;
 import org.springframework.data.annotation.Id;
 import org.springframework.data.mongodb.core.mapping.Document;
 
-@Document(collection = "Country")
+@Document(collection = "encryptionKeys")
 @Data
-public class Country {
+public class Encryption {
     @Id
     private String id;
-    private String name;
-    private String code;
-    private String status; // Allowed - 1, Deleted - 2, Banned - 3
+    private String encryptionKey;
 }
