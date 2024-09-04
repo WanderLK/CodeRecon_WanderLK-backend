@@ -2,10 +2,14 @@ package org.coderecon.wanderlkspringbackend.Configuration;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import org.coderecon.wanderlkspringbackend.dto.AuthenticationResponse;
+import org.coderecon.wanderlkspringbackend.models.Encryption;
 import org.coderecon.wanderlkspringbackend.models.Token;
 import org.coderecon.wanderlkspringbackend.models.User;
+import org.coderecon.wanderlkspringbackend.repositories.EncryptionRepository;
 import org.coderecon.wanderlkspringbackend.repositories.TokenRepository;
 import org.coderecon.wanderlkspringbackend.repositories.UserRepository;
+import org.coderecon.wanderlkspringbackend.services.EncryptionService;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -13,7 +17,9 @@ import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
+import java.security.Key;
 
+import java.util.Base64;
 import java.util.List;
 import java.util.Objects;
 
@@ -26,6 +32,14 @@ public class AuthenticationService {
     private final TokenRepository tokenRepository;
     private final AuthenticationManager authenticationManager;
 
+
+
+    @Autowired
+    private EncryptionRepository encryptionRepository;
+
+    @Autowired
+    private EncryptionService encryptionService;
+
     public AuthenticationService(UserRepository userRepository, PasswordEncoder passwordEncoder, JwtService jwtService, TokenRepository tokenRepository, AuthenticationManager authenticationManager) {
         this.userRepository = userRepository;
         this.passwordEncoder = passwordEncoder;
@@ -35,7 +49,18 @@ public class AuthenticationService {
     }
 
     // Handles user registration
-    public AuthenticationResponse register(User request) {
+    public AuthenticationResponse register(User request) throws Exception {
+        // Generate a unique key for the user
+        Key key = encryptionService.generateKey();
+
+        // Save the encryption key
+        Encryption encryptionKey = new Encryption();
+        encryptionKey.setEncryptionKey(Base64.getEncoder().encodeToString(key.getEncoded()));
+        encryptionRepository.save(encryptionKey);
+
+
+//        String encryptedData = encryptionService.encrypt(data, key);
+
         System.out.println("Inside register " + request.getEmail());
 
         // Check if user already exists
@@ -49,6 +74,7 @@ public class AuthenticationService {
         user.setPassword(passwordEncoder.encode(request.getPassword()));
         user.setFirstName(request.getFirstName());
         user.setLastName(request.getLastName());
+        user.setEncryptionKeyId(encryptionKey.getId());
 
         // Validate and set user role
         if (request.getRole() == null) {
