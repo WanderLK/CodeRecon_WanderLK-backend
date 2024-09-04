@@ -11,6 +11,7 @@ import java.time.LocalDate;
 public class VisaDetails {
     @Id
     private String id;
+    private String userID;
 
     // Country Details
     private String country;

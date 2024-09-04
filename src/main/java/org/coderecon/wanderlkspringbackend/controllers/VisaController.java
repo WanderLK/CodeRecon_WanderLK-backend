@@ -15,12 +15,12 @@ public class VisaController {
     private VisaServices visaServices;
 
     @PostMapping("/create")
-    public ResponseEntity<Object> createVisa(@RequestBody VisaDetails body) {
+    public ResponseEntity<Object> createVisa(@RequestBody VisaDetails body) throws Exception {
         return visaServices.create(body);
     }
 
     @GetMapping("/get/{id}")
-    public ResponseEntity<Object> getVisa(@PathVariable String id) {
+    public VisaDetails getVisa(@PathVariable String id) throws Exception {
         return visaServices.get(id);
     }
 

@@ -1,7 +1,11 @@
 package org.coderecon.wanderlkspringbackend.services;
 
+import org.coderecon.wanderlkspringbackend.models.Encryption;
+import org.coderecon.wanderlkspringbackend.models.User;
 import org.coderecon.wanderlkspringbackend.models.VisaDetails;
 import org.coderecon.wanderlkspringbackend.models.VisaStatus;
+import org.coderecon.wanderlkspringbackend.repositories.EncryptionRepository;
+import org.coderecon.wanderlkspringbackend.repositories.UserRepository;
 import org.coderecon.wanderlkspringbackend.repositories.VisaRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -9,6 +13,9 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import javax.crypto.spec.SecretKeySpec;
+import java.security.Key;
+import java.util.Base64;
 import java.util.Optional;
 
 @Service
@@ -17,14 +24,33 @@ public class VisaServices {
     @Autowired
     private VisaRepository visaRepository;
 
-    public ResponseEntity<Object> create(VisaDetails request) {
-            VisaDetails visaDetails = visaRepository.save(request);
-            return ResponseEntity.ok(visaDetails);
+    @Autowired
+    private UserRepository userRepository;
+
+    @Autowired
+    private EncryptionService encryptionService;
+
+    @Autowired
+    private EncryptionRepository encryptionRepository;
+
+    public ResponseEntity<Object> create(VisaDetails request) throws Exception {
+        User user = userRepository.findById(request.getUserID()).orElseThrow(() -> new RuntimeException("User not found"));
+        Encryption encryptionKey = encryptionRepository.findById(user.getEncryptionKeyId()).orElseThrow(() -> new RuntimeException("Encryption key not found for user"));
+        Key key = new SecretKeySpec(Base64.getDecoder().decode(encryptionKey.getEncryptionKey()), "AES");
+        request.setPassportNumber(encryptionService.encrypt(request.getPassportNumber(), key));
+        VisaDetails visaDetails = visaRepository.save(request);
+        return ResponseEntity.ok(visaDetails);
     }
 
-    public ResponseEntity<Object> get(String id) {
-        Optional<VisaDetails> visaDetails = visaRepository.findById(id);
-        return visaDetails.<ResponseEntity<Object>>map(ResponseEntity::ok).orElseGet(() -> ResponseEntity.notFound().build());
+    public VisaDetails get(String id) throws Exception {
+        VisaDetails visaDetail = visaRepository.findOneById(id);
+
+        User user = userRepository.findById(visaDetail.getUserID()).orElseThrow(() -> new RuntimeException("User not found"));
+        Encryption encryptionKey = encryptionRepository.findById(user.getEncryptionKeyId()).orElseThrow(() -> new RuntimeException("Encryption key not found for user"));
+        Key key = new SecretKeySpec(Base64.getDecoder().decode(encryptionKey.getEncryptionKey()), "AES");
+
+        visaDetail.setPassportNumber(encryptionService.decrypt(visaDetail.getPassportNumber(), key));
+        return visaDetail;
     }
 
     public ResponseEntity<Object> delete(String id) {
