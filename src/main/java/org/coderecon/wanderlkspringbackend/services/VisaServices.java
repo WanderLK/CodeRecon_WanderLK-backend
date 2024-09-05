@@ -84,6 +84,10 @@ public class VisaServices {
             visaDetails.setVisaProcessStatus(visaStatus);
         }
 
+        EmailRequest emailRequest = new EmailRequest();
+        emailRequest.setFirstname(user.getFirstName());
+        emailRequest.setEmail(user.getEmail());
+
         switch (fieldName) {
             case "receivedEmbassy":
                 visaStatus.setReceivedEmbassy(newValue);
@@ -107,10 +111,6 @@ public class VisaServices {
                 visaStatus.setReturnPermitVerification(newValue);
                 break;
             case "visaRequestApproval":
-
-                EmailRequest emailRequest = new EmailRequest();
-                emailRequest.setFirstname(user.getFirstName());
-                emailRequest.setEmail(user.getEmail());
 
                 if(Objects.equals(newValue, "passed")) {
                     Mono<String> response = webClient.post()
@@ -137,6 +137,13 @@ public class VisaServices {
                 visaStatus.setVisaProcessing(newValue);
                 break;
             case "visaProcessCompleted":
+                Mono<String> response = webClient.post()
+                        .uri("completed")
+                        .bodyValue(emailRequest)
+                        .retrieve()
+                        .bodyToMono(String.class);
+
+                System.out.println(response.block());
                 visaStatus.setVisaProcessCompleted(newValue);
                 break;
             default:
