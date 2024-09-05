@@ -13,6 +13,10 @@ public class VisaDetails {
     private String id;
     private String userID;
 
+    private String dateOfApplied = LocalDate.now().toString();
+    private String dateOfRequested ;
+    private String dateOfIssued;
+    
     // Country Details
     private String country;
     private String visaType;
