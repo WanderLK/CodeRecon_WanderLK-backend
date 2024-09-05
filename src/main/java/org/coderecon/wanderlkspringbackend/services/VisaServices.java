@@ -41,25 +41,18 @@ public class VisaServices {
     public ResponseEntity<String> updateVisaStatusField(String id, String fieldName, String newValue) {
         Optional<VisaDetails> optionalVisaDetails = visaRepository.findById(id);
 
-        // Logging to check if VisaDetails object is present
         System.out.println(optionalVisaDetails.isPresent());
 
         if (optionalVisaDetails.isPresent()) {
             VisaDetails visaDetails = optionalVisaDetails.get();
 
-            // Logging the current state of the VisaDetails object
-            System.out.println(visaDetails);
-
-            // Retrieve the VisaStatus object
             VisaStatus visaStatus = visaDetails.getVisaProcessStatus();
 
-            // Handle case where VisaStatus might be null
             if (visaStatus == null) {
                 visaStatus = new VisaStatus();
                 visaDetails.setVisaProcessStatus(visaStatus);
             }
 
-            // Update the appropriate field in VisaStatus
             switch (fieldName) {
                 case "receivedEmbassy":
                     visaStatus.setReceivedEmbassy(newValue);
@@ -95,7 +88,6 @@ public class VisaServices {
                     return ResponseEntity.badRequest().body("Invalid field name: " + fieldName);
             }
 
-            // Save the updated VisaDetails entity
             visaRepository.save(visaDetails);
             return ResponseEntity.ok("Visa status '" + fieldName + "' updated successfully.");
         } else {
