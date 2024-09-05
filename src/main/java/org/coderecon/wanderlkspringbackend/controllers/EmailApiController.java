@@ -41,6 +41,7 @@ public class EmailApiController {
         return ResponseEntity.ok(response.block());
     }
 
+
     @PostMapping("/denied")
     public ResponseEntity<Object> denied(@RequestBody Email body) {
         Mono<String> response = webClient.post()
