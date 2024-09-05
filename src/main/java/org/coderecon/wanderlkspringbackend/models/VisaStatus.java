@@ -5,14 +5,14 @@ import lombok.Data;
 @Data
 public class VisaStatus {
     private String id;
-    private String receivedEmbassy; // passed, failed, pending
-    private String reviewingApplication; // passed, failed, pending
-    private String personalDetailsVerification; // passed, failed, pending
-    private String imageVerification; // passed, failed, pending
-    private String passportVerification; // passed, failed, pending
-    private String accommodationProofVerification; // passed, failed, pending
-    private String returnPermitVerification; // passed, failed, pending
-    private String visaRequestApproval; // passed, failed, pending
-    private String visaProcessing; // passed, failed, pending
-    private String visaProcessCompleted; // passed, failed, pending
+    private String receivedEmbassy = "pending"; // passed, failed, pending
+    private String reviewingApplication = "pending" ; // passed, failed, pending
+    private String personalDetailsVerification = "pending" ; // passed, failed, pending
+    private String imageVerification = "pending" ; // passed, failed, pending
+    private String passportVerification = "pending"; // passed, failed, pending
+    private String accommodationProofVerification = "pending" ; // passed, failed, pending
+    private String returnPermitVerification = "pending" ; // passed, failed, pending
+    private String visaRequestApproval = "pending" ; // passed, failed, pending
+    private String visaProcessing = "pending" ; // passed, failed, pending
+    private String visaProcessCompleted = "pending"; // passed, failed, pending
 }
