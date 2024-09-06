@@ -65,7 +65,7 @@ public class AuthenticationService {
 
         // Check if user already exists
         if (userRepository.findByEmail(request.getEmail()).isPresent()) {
-            return new AuthenticationResponse(null, null, "User already exists");
+            return new AuthenticationResponse(null, null, "User already exists", null);
         }
 
         // Create and save new user
@@ -79,18 +79,7 @@ public class AuthenticationService {
         // Validate and set user role
         if (request.getRole() == null) {
             request.setRole("TOURIST");
-//            return new AuthenticationResponse(null, null, "Role is required");
         }
-
-        // Check if the role is valid
-//        if (isValidRole(request.getRole())) {
-//            user.setRole(request.getRole());
-//            if (requiresCafeId(request.getRole())) {
-//                user.setCafeId(request.getCafeId());
-//            }
-//        } else {
-//            return new AuthenticationResponse(null, null, "Invalid role");
-//        }
 
         // Save user and generate tokens
         user = userRepository.save(user);
@@ -100,7 +89,7 @@ public class AuthenticationService {
         // Save user tokens
         saveUserToken(accessToken, refreshToken, user);
 
-        return new AuthenticationResponse(accessToken, refreshToken, "User registration was successful");
+        return new AuthenticationResponse(accessToken, refreshToken, "User registration was successful", user.getId());
     }
 
     // Helper method to validate role ---------------------- TO DO
@@ -136,7 +125,7 @@ public class AuthenticationService {
             System.out.println("Password matches");
         } else {
             System.out.println("Password does not match");
-            return new AuthenticationResponse(null, null, "User login failed. Password does not match");
+            return new AuthenticationResponse(null, null, "User login failed. Password does not match", null);
         }
 
         // Retrieve user and generate tokens
@@ -149,7 +138,7 @@ public class AuthenticationService {
 //        revokeAllTokenByUser(user);
         saveUserToken(accessToken, refreshToken, user);
 
-        return new AuthenticationResponse(accessToken, refreshToken, "User login was successful");
+        return new AuthenticationResponse(accessToken, refreshToken, "User login was successful", user.getId());
     }
 
     // Revokes all tokens for a user
@@ -208,7 +197,7 @@ public class AuthenticationService {
             revokeAllTokenByRefreshToken(token);
             saveUserToken(token, accessToken, user);
 
-            return new ResponseEntity<>(new AuthenticationResponse(accessToken, token, "New token generated"), HttpStatus.OK);
+            return new ResponseEntity<>(new AuthenticationResponse(accessToken, token, "New token generated", user.getId()), HttpStatus.OK);
         }
 
         return new ResponseEntity<>(HttpStatus.UNAUTHORIZED);

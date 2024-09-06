@@ -15,4 +15,7 @@ public class AuthenticationResponse {
 
     @JsonProperty("message")
     private String message;
+
+    @JsonProperty("user_id")
+    private String userId;
 }
