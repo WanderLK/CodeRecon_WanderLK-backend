@@ -21,6 +21,8 @@ public class VisaDetails {
     private String country;
     private String visaType;
     private String reason;
+    private LocalDate requestDate;
+    private String duration;
 
     // Personal Details
     private String fullName;
@@ -36,6 +38,7 @@ public class VisaDetails {
     private PhotoValidation photoValidation;
 
     // Passport Details
+    private String passportPhoto;
     private String passportNumber;
     private String passportIssueDate;
     private String passportExpiryDate;
