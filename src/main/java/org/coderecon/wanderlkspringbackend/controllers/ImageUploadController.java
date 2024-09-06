@@ -8,6 +8,7 @@ import java.io.File;
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.OutputStream;
+import java.util.UUID;
 
 @RestController
 @RequestMapping("/api/images")
@@ -22,12 +23,13 @@ public class ImageUploadController {
         }
 
         try {
-            // Save the file locally
+            // Generate a unique name for the file
+            String uniqueFileName = UUID.randomUUID().toString() + "-" + file.getOriginalFilename();
             File folder = new File(UPLOADED_FOLDER);
             if (!folder.exists()) {
                 folder.mkdirs();
             }
-            File serverFile = new File(folder.getAbsolutePath() + File.separator + file.getOriginalFilename());
+            File serverFile = new File(folder.getAbsolutePath() + File.separator + uniqueFileName);
             try (OutputStream os = new FileOutputStream(serverFile)) {
                 os.write(file.getBytes());
             }
@@ -35,7 +37,7 @@ public class ImageUploadController {
             // Return the URL of the uploaded image
             String fileDownloadUri = ServletUriComponentsBuilder.fromCurrentContextPath()
                     .path("/api/images/download/")
-                    .path(file.getOriginalFilename())
+                    .path(uniqueFileName)
                     .toUriString();
 
             return "File uploaded successfully: " + fileDownloadUri;
@@ -53,5 +55,6 @@ public class ImageUploadController {
         return java.nio.file.Files.readAllBytes(file.toPath());
     }
 }
+
 
 
