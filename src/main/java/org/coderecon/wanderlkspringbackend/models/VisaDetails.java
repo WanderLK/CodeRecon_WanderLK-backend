@@ -36,6 +36,7 @@ public class VisaDetails {
     private PhotoValidation photoValidation;
 
     // Passport Details
+    private String passportPhoto;
     private String passportNumber;
     private String passportIssueDate;
     private String passportExpiryDate;
