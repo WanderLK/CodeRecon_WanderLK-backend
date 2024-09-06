@@ -21,7 +21,7 @@ public class S3ImageUploader {
     private String folderName = "wanderlk-resources/";
 
 
-    public String uploadToS3(String userEmail, String uploadType, InputStream fileContent, String fileName) {
+    public String uploadToS3(String userEmail, String uploadType, byte[] fileContent, String fileName) {
         System.out.println("Inside upload to S3 method");
         // Generate a new file name based on user's email and original extension
         String newFileName = folderName + generateFileName(userEmail, uploadType, fileName);
