@@ -1,5 +1,6 @@
 package org.coderecon.wanderlkspringbackend.controllers;
 
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
@@ -8,6 +9,8 @@ import java.io.File;
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.OutputStream;
+import java.util.HashMap;
+import java.util.Map;
 import java.util.UUID;
 
 @RestController
@@ -17,9 +20,9 @@ public class ImageUploadController {
     private static final String UPLOADED_FOLDER = "uploaded-images/";
 
     @PostMapping("/upload")
-    public String uploadImage(@RequestParam("file") MultipartFile file) {
+    public ResponseEntity<Object> uploadImage(@RequestParam("file") MultipartFile file) {
         if (file.isEmpty()) {
-            return "Please select a file to upload.";
+            return ResponseEntity.badRequest().body("Please select a file to upload.");
         }
 
         try {
@@ -40,11 +43,13 @@ public class ImageUploadController {
                     .path(uniqueFileName)
                     .toUriString();
 
-            return "File uploaded successfully: " + fileDownloadUri;
+            Map<String, String> response = new HashMap<>();
+            response.put("url", fileDownloadUri);
+            return ResponseEntity.ok(response);
 
         } catch (IOException e) {
             e.printStackTrace();
-            return "File upload failed.";
+            return ResponseEntity.internalServerError().body(e.getMessage());
         }
     }
 
