@@ -52,4 +52,6 @@ public class VisaDetails {
 
     // Visa Process Details
     private VisaStatus visaProcessStatus;
+
+    private String travelHistory;
 }
