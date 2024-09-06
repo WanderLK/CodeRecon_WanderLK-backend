@@ -13,9 +13,9 @@ import org.springframework.context.annotation.Configuration;
 @Configuration
 @OpenAPIDefinition(
         info = @Info(
-                title = "LaFresca Backend API",
+                title = "Wander LK Backend API",
                 version = "1.0",
-                description = "API documentation for the LaFresca Backend",
+                description = "API documentation for the Wander LK Backend",
                 contact = @Contact(
                         name = "Dasun Thathsara",
                         email = "dasunthathsara974@gmail.com"
@@ -33,7 +33,7 @@ import org.springframework.context.annotation.Configuration;
                 ),
                 @Server(
                         description = "Production ENV",
-                        url = "https://lafresca.com"
+                        url = "https://wanderlk.com"
                 )
         },
         security = {
