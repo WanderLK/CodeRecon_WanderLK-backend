@@ -92,6 +92,8 @@ public class JwtService {
     private String generateToken(User user, long expiration) {
         String token = Jwts.builder()
                 .setSubject(user.getEmail())
+                .claim("firstName", user.getFirstName())
+                .claim("lastName", user.getLastName())
                 .claim("role", user.getRole())
                 .claim("userId", user.getId())
                 .claim("email", user.getEmail())
